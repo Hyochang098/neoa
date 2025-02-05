@@ -1,31 +1,28 @@
 import java.util.Scanner;
 
 public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int count = 0;
 
-	public static void main(String[] args) {
+        for (int i = 0; i < n; i++) {
+            if (isPrime(sc.nextInt())) {
+                count++;
+            }
+        }
 
-		Scanner sc = new Scanner(System.in);
-		int a = sc.nextInt();
-		int[] arr = new int[a];
-		int count = 0;
-		for (int i = 0; i < a; i++) {
-			arr[i] = sc.nextInt();
-			if (prime(arr[i]) == true) {
-				count++;
-			}
-		}
-		System.out.println(count);
-	}
+        System.out.println(count);
+    }
 
-	public static boolean prime(int a) {
-		if (a < 2)
-			return false;
-		for (int i = 2; i < a; i++) {
-			if (a % i == 0) {
-				return false;
-			}
-		}
-		return true;
-	}
+    public static boolean isPrime(int a) {
+        if (a < 2) return false; 
+        if (a == 2) return true; 
+        if (a % 2 == 0) return false;
+        for (int i = 3; i * i <= a; i += 2) { 
+            if (a % i == 0) return false;
+        }
 
+        return true;
+    }
 }
