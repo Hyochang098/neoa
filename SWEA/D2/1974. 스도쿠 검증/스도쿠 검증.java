@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 public class Solution {
@@ -5,46 +6,61 @@ public class Solution {
 		Scanner sc = new Scanner(System.in);
 		int t = sc.nextInt();
 		for (int tc = 1; tc <= t; tc++) {
+
 			int[][] sudoku = new int[9][9];
+
+			boolean garo = true;
 			for (int i = 0; i < 9; i++) {
+				int garosum = 0;
 				for (int j = 0; j < 9; j++) {
 					sudoku[i][j] = sc.nextInt();
+					garosum += sudoku[i][j];
+				}
+				if (garosum != 45) {
+					garo = false;
+				}
+			}
+			boolean sero = true;
+			SE: for (int i = 0; i < 9; i++) {
+				int serosum = 0;
+				for (int j = 0; j < 9; j++) {
+					serosum += sudoku[j][i];
+				}
+				if (serosum != 45) {
+					sero = false;
+					break SE;
+				}
+			}
+			boolean nemo = true;
+			NE: for (int i = 0; i < 3; i += 3) {
+				for (int j = 0; j < 3; j += 3) {
+					nemo = checknemo(sudoku, i, j);
+					if (!nemo) {
+						break;
+					}
 				}
 			}
 
-			if (checking(sudoku)) {
-				System.out.println("#"+tc+" "+1);
+			if (garo && nemo && sero) {
+				System.out.println("#" + tc + " " + 1);
 			} else {
-				System.out.println("#"+tc+" "+0);
+				System.out.println("#" + tc + " " + 0);
 			}
+
 		}
 	}
 
-	public static boolean checking(int[][] sudoku) {
-        for (int i = 0; i < 9; i++) {
-            boolean[] rowCheck = new boolean[10];
-            boolean[] colCheck = new boolean[10];
-            for (int j = 0; j < 9; j++) {
-                if (rowCheck[sudoku[i][j]]) return false;
-                if (sudoku[i][j] != 0) rowCheck[sudoku[i][j]] = true;
-
-                if (colCheck[sudoku[j][i]]) return false;
-                if (sudoku[j][i] != 0) colCheck[sudoku[j][i]] = true;
-            }
-        }
-
-        for (int startRow = 0; startRow < 9; startRow += 3) {
-            for (int startCol = 0; startCol < 9; startCol += 3) {
-                boolean[] check = new boolean[10];
-                for (int i = startRow; i < startRow + 3; i++) {
-                    for (int j = startCol; j < startCol + 3; j++) {
-                        if (check[sudoku[i][j]]) return false;
-                        if (sudoku[i][j] != 0) check[sudoku[i][j]] = true;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
+	static boolean checknemo(int[][] arr, int y, int x) {
+		int sum = 0;
+		for (int i = y; i < y + 3; i++) {
+			for (int j = x; j < x + 3; j++) {
+				sum += arr[i][j];
+			}
+		}
+		if (sum == 45) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
