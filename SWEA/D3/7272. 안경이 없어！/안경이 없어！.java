@@ -1,75 +1,55 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Solution {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+
 		int t = sc.nextInt();
+		sc.nextLine();
 		for (int tc = 1; tc <= t; tc++) {
-			String str1 = sc.next();
-			String str2 = sc.next();
+			String a = sc.next();
+			String b = sc.next();
 
-			int[] num_str1 = new int[str1.length()];
-			int[] num_str2 = new int[str2.length()];
+			boolean kyung = true;
 
-			for (int i = 0; i < str1.length(); i++) {
-				num_str1[i] = translate(str1.charAt(i));
-			}
-			for (int i = 0; i < str2.length(); i++) {
-				num_str2[i] = translate(str2.charAt(i));
-			}
-			boolean point = true;
-			if (num_str1.length != num_str2.length)
-				point = false;
-			else {
-				for (int i = 0; i < str2.length(); i++) {
-					if (num_str1[i] != num_str2[i])
-						point = false;
+			if (a.length() != b.length()) {
+				kyung = false;
+			} else {
+				for (int i = 0; i < a.length(); i++) {
+					if (tran(a.charAt(i)) != tran(b.charAt(i))) {
+						kyung = false;
+						break;
+					}
 				}
 			}
-			if (point)
-				System.out.println("#" + tc + " SAME");
-			else
-				System.out.println("#" + tc + " DIFF");
+			if (kyung) {
+				System.out.println("#" + tc + " " + "SAME");
+			} else {
+				System.out.println("#" + tc + " " + "DIFF");
+			}
+
 		}
 	}
 
-	public static int translate(char c) {
-		int result = 0;
-		switch (c) {
+	static char tran(char a) {
+		char result = 'a';
+		switch (a) {
 		case 'A':
 		case 'D':
 		case 'O':
 		case 'P':
 		case 'Q':
 		case 'R':
-			result = 1;
+			result = 'A';
 			break;
 		case 'B':
-			result = 0;
+			result = 'B';
 			break;
-		case 'C':
-		case 'H':
-		case 'E':
-		case 'F':
-		case 'G':
-		case 'I':
-		case 'J':
-		case 'K':
-		case 'L':
-		case 'M':
-		case 'N':
-		case 'S':
-		case 'T':
-		case 'U':
-		case 'V':
-		case 'W':
-		case 'X':
-		case 'Y':
-		case 'Z':
-			result = -1;
+		default:
+			result = 'C';
 			break;
 		}
 		return result;
 	}
+
 }
