@@ -1,17 +1,40 @@
-from collections import deque
 
-for _ in range(1, 11):
-    note = ['#', str(input())]
-    que = deque(map(int, input().split()))
-    num = 1
-    while True:
-        a = que.popleft()
-        a -= num
-        if a <= 0:
-            que.append(0)
-            break
-        else:
-            que.append(a)
-        num = num % 5 + 1
-    ans = list(que)
-    print(''.join(note),*ans)
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class Solution {
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		for (int tc = 0; tc < 10; tc++) {
+			int t = sc.nextInt();
+			Queue<Integer> que = new LinkedList<>();
+			for (int i = 0; i < 8; i++) {
+				que.add(sc.nextInt());
+			}
+
+			int key = 1;
+
+			while (true) {
+				int num = que.poll();
+				if (key >= num) {
+					num = 0;
+					que.add(num);
+					break;
+				} else {
+					num -= key;
+					que.add(num);
+				}
+				key = (key + 1) % 6;
+				if(key==0) {
+					key=1;
+				}
+			}
+			System.out.print("#" + t + " " );
+			while(!que.isEmpty()) {
+				System.out.print(que.poll()+" ");
+			}
+			System.out.println();
+		}
+	}
+}
