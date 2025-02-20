@@ -60,7 +60,7 @@ public class Main {
 			}
 		}
 		Collections.sort(list);
-		sb.append(ans).append("\n");
+		System.out.println(ans);
 		for(int i:list) {
 			sb.append(i).append("\n");
 		}
