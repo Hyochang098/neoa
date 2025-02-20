@@ -41,7 +41,6 @@ public class Main {
 		quevisited[v] = true;
 		while (!que.isEmpty()) {
 			int cur = que.poll();
-			quevisited[cur] = true;
 			System.out.print(cur + " ");
 			for (int i = 1; i <= n; i++) {
 				if (arr[cur][i] == 1 && quevisited[i] == false) {
