@@ -1,71 +1,61 @@
-import java.util.LinkedList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        sc.nextLine();
-
-        int[][] map = new int[n][m];
-
-        for (int i = 0; i < n; i++) {
-            String line = sc.nextLine();
-            for (int j = 0; j < m; j++) {
-                map[i][j] = line.charAt(j) - '0'; 
-            }
-        }
-        
-        int ans = bfs(map);
-        System.out.println(ans);
-    }
-
-    public static int bfs(int[][] arr) {
-        int a = arr.length;
-        int b = arr[0].length;
-        
-        Queue<int[]> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[a][b];
-
-        queue.offer(new int[] { 0, 0 });
-        visited[0][0] = true;
-
-        int[] dy = { 1, -1, 0, 0 };
-        int[] dx = { 0, 0, 1, -1 };
-
-        int count = 0;  
+	static int n;
+	static int m;
+	static int[][] miro;
+	static boolean[][] visited;
+	static int[][] time;
+	static int[] dy = { 1, -1, 0, 0 };
+	static int[] dx = { 0, 0, 1, -1 };
 
 
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            count++;  
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-            for (int i = 0; i < size; i++) {
-                int[] cur = queue.poll();
-                int y = cur[0];
-                int x = cur[1];
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
 
-                if (y == a - 1 && x == b - 1) {
-                    return count;
-                }
+		miro = new int[n][m];
+		visited = new boolean[n][m];
+		time = new int[n][m];
+		for (int i = 0; i < n; i++) {
+			String temp = br.readLine();
+			for (int j = 0; j < m; j++) {
+				miro[i][j] = temp.charAt(j)-'0';
+			}
+		}
 
-                for (int j = 0; j < 4; j++) {
-                    int ny = y + dy[j];
-                    int nx = x + dx[j];
+		bfs();
+		System.out.println(time[n-1][m-1]);
+	}
 
-                    if (ny >= 0 && ny < a && nx >= 0 && nx < b) {
-                        if (arr[ny][nx] == 1 && !visited[ny][nx]) {
-                            visited[ny][nx] = true;
-                            queue.offer(new int[] { ny, nx });
-                        }
-                    }
-                }
-            }
-        }
+	static void bfs() {
+		// TODO Auto-generated method stub
+		Queue<int[]> que = new ArrayDeque<>();
+		que.add(new int[] { 0, 0 });
+		time[0][0]=1;
+		visited[0][0]=true;
+		while (!que.isEmpty()) {
+			int[] temp = que.poll();
+			int y = temp[0];
+			int x = temp[1];
 
-        return -1;
-    }
+			for (int i = 0; i < 4; i++) {
+				int ny = y + dy[i];
+				int nx = x + dx[i];
+				if (ny >= 0 && ny < n && nx >= 0 && nx < m && miro[ny][nx] == 1 && !visited[ny][nx]) {
+					que.add(new int[] { ny, nx });
+					time[ny][nx]=time[y][x]+1;
+					visited[ny][nx] = true;
+				}
+			}
+		}
+	}
 }
