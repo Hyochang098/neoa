@@ -1,72 +1,69 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringBuilder sb = new StringBuilder();
+    static int n;
+    static int[][] village;
+    static int[] dy = {1, -1, 0, 0};
+    static int[] dx = {0, 0, 1, -1};
+    static List<Integer> note = new ArrayList<>();
 
-		int n = Integer.parseInt(br.readLine());
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-		int[][] apart = new int[n][n];
-		for (int i = 0; i < n; i++) {
-			String temp = br.readLine();
-			for (int j = 0; j < n; j++) {
-				apart[i][j] = temp.charAt(j) - '0';
-			}
-		}
-		Queue<int[]> que = new ArrayDeque<>();
-		boolean[][] visit = new boolean[n][n];
+        n = Integer.parseInt(br.readLine());
+        village = new int[n][n];
 
-		int[] dy = { 1, -1, 0, 0 };
-		int[] dx = { 0, 0, -1, 1 };
+        for (int i = 0; i < n; i++) {
+            String temp = br.readLine();
+            for (int j = 0; j < n; j++) {
+                village[i][j] = temp.charAt(j) - '0';
+            }
+        }
 
-		int ans = 0;
-		List<Integer> list = new ArrayList<>();
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (apart[i][j] == 1 && !visit[i][j]) {
-					int cnt = 1;
-					que.add(new int[] { i, j });
-					visit[i][j] = true;
-					while (!que.isEmpty()) {
-						int[] arr = que.poll();
-						int y = arr[0];
-						int x = arr[1];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (village[i][j] == 1) {
+                    note.add(bfs(i, j));
+                }
+            }
+        }
 
-						for (int k = 0; k < 4; k++) {
-							int ny = y + dy[k];
-							int nx = x + dx[k];
+        Collections.sort(note); 
+        bw.write(note.size() + "\n");
 
-							if (ny >= 0 && ny < n && nx >= 0 && nx < n && !visit[ny][nx] && apart[ny][nx] == 1) {
-								que.add(new int[] { ny, nx });
-								visit[ny][nx] = true;
-								cnt++;
-							}
-						}
-					}
-					ans++;
-					list.add(cnt);
-				}
-			}
-		}
-		Collections.sort(list);
-		System.out.println(ans);
-		for(int i:list) {
-			sb.append(i).append("\n");
-		}
-		bw.write(sb.toString());
-		bw.flush();
-		bw.close();
+        for (int num : note) {
+            bw.write(num + "\n");
+        }
 
-	}
+        bw.flush();
+        bw.close();
+    }
+
+    static int bfs(int i, int j) {
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.add(i * n + j); 
+        village[i][j] = 0;  
+        int cnt = 1;  
+
+        while (!queue.isEmpty()) {
+            int num = queue.poll();
+            int y = num / n;  
+            int x = num % n;  
+
+            for (int d = 0; d < 4; d++) {
+                int ny = y + dy[d];
+                int nx = x + dx[d];
+
+                if (ny >= 0 && ny < n && nx >= 0 && nx < n && village[ny][nx] == 1) {
+                    village[ny][nx] = 0;  
+                    queue.add(ny * n + nx); 
+                    cnt++;
+                }
+            }
+        }
+
+        return cnt;
+    }
 }
