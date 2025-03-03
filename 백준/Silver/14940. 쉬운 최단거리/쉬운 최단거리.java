@@ -3,71 +3,86 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayDeque;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+	static int n, m;
+	static int[][] map;
+
+	static int[][] time;
+	static boolean[][] visited;
+
+	static int[] dy = { 1, -1, 0, 0 };
+	static int[] dx = { 0, 0, -1, 1 };
+
+	static Queue<int[]> que;
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringBuilder sb = new StringBuilder();
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		StringTokenizer st1 = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st1.nextToken());
-		int m = Integer.parseInt(st1.nextToken());
-		int[][] map = new int[n][m];
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
 
-		boolean[][] visited = new boolean[n][m];
-		Queue<int[]> que = new ArrayDeque<>();
+		map = new int[n][m];
+		time = new int[n][m];
+		visited = new boolean[n][m];
+		que = new LinkedList<>();
 
 		for (int i = 0; i < n; i++) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < m; j++) {
 				map[i][j] = Integer.parseInt(st.nextToken());
 				if (map[i][j] == 2) {
 					que.add(new int[] { i, j });
 					visited[i][j] = true;
-					map[i][j] = 0;
+					time[i][j] = 0;
 				}
 			}
 		}
+		bfs();
 
-		int[] dy = new int[] { 1, -1, 0, 0 };
-		int[] dx = new int[] { 0, 0, -1, 1 };
-		while (!que.isEmpty()) {
-			int size = que.size();
-			for (int i = 0; i < size; i++) {
-				int[] temp = que.poll();
-				int y = temp[0];
-				int x = temp[1];
-
-				for (int j = 0; j < 4; j++) {
-					int ny = y + dy[j];
-					int nx = x + dx[j];
-
-					if (0 <= ny && ny < n && 0 <= nx && nx < m && map[ny][nx] == 1 && !visited[ny][nx]) {
-						que.add(new int[] { ny, nx });
-						visited[ny][nx] = true;
-						map[ny][nx] = map[y][x] + 1;
-					}
-				}
-			}
-		}
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < n; i++) {
-			if (i != 0)
-				sb.append("\n");
 			for (int j = 0; j < m; j++) {
-				if (!visited[i][j] && map[i][j] == 1) {
-					map[i][j] = -1;
+				if (visited[i][j]) {
+					sb.append(time[i][j]).append(" ");
+				} else if (map[i][j] == 1 && !visited[i][j]) {
+					sb.append(-1).append(" ");
+				}else if(!visited[i][j]) {
+					sb.append(0).append(" ");
 				}
-				sb.append(map[i][j]).append(" ");
-
 			}
+			sb.append("\n");
 		}
+
 		bw.write(sb.toString());
 		bw.flush();
 		bw.close();
+
 	}
 
+	private static void bfs() {
+		// TODO Auto-generated method stub
+		while (!que.isEmpty()) {
+			int[] temp = que.poll();
+			int y = temp[0];
+			int x = temp[1];
+
+			for (int i = 0; i < 4; i++) {
+				int ny = y + dy[i];
+				int nx = x + dx[i];
+				if (ny >= 0 && ny < n && nx >= 0 && nx < m&& !visited[ny][nx] && map[ny][nx] == 1) {
+					que.add(new int[] { ny, nx });
+					visited[ny][nx] = true;
+					time[ny][nx] = time[y][x] + 1;
+				}
+			}
+
+		}
+
+	}
 }
