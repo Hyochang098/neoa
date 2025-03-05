@@ -18,29 +18,51 @@ public class Main {
 		}
 
 		// 1번
-		ArrayList<Integer> pre = new ArrayList<>();
-		pre.add(tri[0][0]);
+//		ArrayList<Integer> pre = new ArrayList<>();
+//		pre.add(tri[0][0]);
+//		for (int i = 1; i < n; i++) {
+//			ArrayList<Integer> cur = new ArrayList<>();
+//			for (int j = 0; j < i + 1; j++) {// pre의 모든 수를 꺼내고 tri에 있는 경우랑 더함 
+//				int num = tri[i][j];
+//				int sub = tri[i][j];
+//				if (j == 0) {// 시작
+//					num += pre.get(j);
+//				} else if (i == j) {// 마지막
+//					num += pre.get(j - 1);
+//				} else {// 중간에 있는애들은 두가지 경우가 있는데 최댓값으로 넣음
+//					num += pre.get(j);
+//					sub += pre.get(j - 1);
+//					num = Math.max(num, sub);
+//				}
+//				cur.add(num);
+//			}
+//			pre = cur;
+//		System.out.println(pre);//확인용
+//		}
+//		int ans = 0;
+//		for (int p : pre) {
+//			ans = Math.max(ans, p);
+//		}
+//		System.out.println(ans);
+
+		// 2번
+		// 배열을 내리면서 해당자리에 더하고 해당 자리에 있는 최댓값을적음?
 		for (int i = 1; i < n; i++) {
-			ArrayList<Integer> cur = new ArrayList<>();
-			for (int j = 0; j < i + 1; j++) {// pre의 모든 수를 꺼내고 tri에 있는 경우랑 더함 
-				int num = tri[i][j];
-				int sub = tri[i][j];
-				if (j == 0) {// 시작
-					num += pre.get(j);
-				} else if (i == j) {// 마지막
-					num += pre.get(j - 1);
-				} else {// 중간에 있는애들은 두가지 경우가 있는데 최댓값으로 넣음
-					num += pre.get(j);
-					sub += pre.get(j - 1);
-					num = Math.max(num, sub);
+			for (int j = 0; j < i + 1; j++) {
+				if (j == 0) {// 제일 앞은 서로 더해줌
+					tri[i][j] += tri[i - 1][j];
+				} else if (j == i) {// 끝인 경우
+					tri[i][j] += tri[i - 1][j - 1];
+				} else {// 둘 중 큰놈으로 더해줍니다 위에서도 두가지를 고를 수 있고 아래에서도 위에 있는 두개를 고를 수 있음
+					tri[i][j] += Math.max(tri[i - 1][j - 1], tri[i - 1][j]);
 				}
-				cur.add(num);
+//				System.out.print(tri[i][j] + " ");
 			}
-			pre = cur;
+//			System.out.println();
 		}
 		int ans = 0;
-		for (int p : pre) {
-			ans = Math.max(ans, p);
+		for (int i = 0; i < n; i++) {
+			ans = Math.max(ans, tri[n - 1][i]);
 		}
 		System.out.println(ans);
 	}
