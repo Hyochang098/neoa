@@ -1,49 +1,40 @@
-
 import java.util.Scanner;
-import java.util.Stack;
 
 public class Main {
-	// 1662 - 압축
-	// 압출된 문자열 S 를 보고 원래 문자열의 길이를 구한다.
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String str = sc.nextLine();
+        System.out.println(getOriginalLength(str, 0, str.length()));
+    }
 
-	// K(Q) = Q가 K개
-	// 33(562(71(9))) - 3567979567979567979
-	// 제일 깊은 괄호에서 부터 나오면서 변환
-	// 문자열을 돌면서 스택에 넣음 나오면서 해당 연산
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+    private static int getOriginalLength(String str, int start, int end) {
+        int length = 0;
+        for (int i = start; i < end; i++) {
+            char c = str.charAt(i);
 
-		String str = sc.nextLine();
+            if (Character.isDigit(c)) { // 숫자일 때
+                if (i + 1 < end && str.charAt(i + 1) == '(') { // 다음 문자가 '(' 인 경우
+                    int k = c - '0'; // K 값 저장
+                    int closeIdx = findClosingBracket(str, i + 1); // 닫는 괄호 위치 찾기
+                    length += k * getOriginalLength(str, i + 2, closeIdx); // Q 부분을 재귀 호출 후 K배 적용
+                    i = closeIdx; // i를 닫는 괄호 위치로 이동
+                } else {
+                    length++; // 단순한 숫자는 길이에 포함
+                }
+            } else if (c != '(' && c != ')') { // 일반 문자 처리
+                length++;
+            }
+        }
+        return length;
+    }
 
-		System.out.println(restore(str));
-	}
-
-	private static int restore(String str) {
-		Stack<Integer> stack = new Stack<>();
-		int length = 0;
-		int multi = 1;
-
-		for (int i = 0; i < str.length(); i++) {
-			char c = str.charAt(i);
-
-			if (Character.isDigit(c)) {
-				if (i + 1 < str.length() && str.charAt(i + 1) == '(') {
-					multi = c - '0';
-				} else {
-					length++;
-				}
-			} else if (c == '(') {
-				stack.push(length);
-				stack.push(multi);
-				length = 0;
-				multi = 1;
-			} else if (c == ')') {
-				int prevm = stack.pop();
-				int prevl = stack.pop();
-				length = prevl + (length * prevm);
-			}
-		}
-
-		return length;
-	}
+    private static int findClosingBracket(String str, int openIdx) {
+        int balance = 0;
+        for (int i = openIdx; i < str.length(); i++) {
+            if (str.charAt(i) == '(') balance++;
+            if (str.charAt(i) == ')') balance--;
+            if (balance == 0) return i; // 짝이 맞는 닫는 괄호 위치 반환
+        }
+        return -1; // 이론상 도달하지 않음 (올바른 입력 가정)
+    }
 }
