@@ -5,9 +5,8 @@ import java.util.Scanner;
 public class Main {
 	static int n;
 	static int[] arr;
-	static int[] calcu= new int[4];// 0->더하기 1->빼기 2-> 곱셈 3->나누기
+	static int[] calcu= new int[4];
 	static List<int[]> permute;
-	// 입력받은 연산자의 순열 조합을 구함
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -49,7 +48,7 @@ public class Main {
 		return ans;
 	}
 	static void combi(int cur, int[] perm) {
-		 if(cur == n-1) {//연산자는 n보다 1개 낮은 길이니까
+		 if(cur == n-1) {
 			 permute.add(perm.clone());
 			 return;
 		 }
