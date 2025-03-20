@@ -1,29 +1,29 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		int k = sc.nextInt();
-		int[] arr = new int[n];
-		int cnt=0;
-		for(int i=0;i<n;i++) {
-			arr[i]=sc.nextInt();
-			if(k/arr[i]>0) {
-				cnt++;
-			}
+		int n = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+
+		int[] coin = new int[n];
+		int idx = -1;
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			coin[i] = Integer.parseInt(br.readLine());
 		}
-		int[] real = new int[cnt];
-		for(int i=0; i<cnt;i++) {
-			real[i]=arr[cnt-i-1];
+		for (int i = n-1; i >= 0; i--) {
+			ans += k / coin[i];
+			k %= coin[i];
+			if (k == 0)
+				break;
 		}
-		int ans=0;
-		for(int coin:real) {
-			ans+=k/coin;
-			k%=coin;
-		}
+
 		System.out.println(ans);
 	}
 }
