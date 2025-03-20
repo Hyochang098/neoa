@@ -1,4 +1,10 @@
-import java.util.Scanner;
+
+//문제 2579 계단 오르기
+//메모리 : 14332kb
+//시간 : 112ms
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
 	// 2579 - 계단 오르기
@@ -12,30 +18,30 @@ public class Main {
 	// DP배열을 만듬 배열에 들어갈 값은 밟았을때
 	// 밟을 수 있는 경우는 n-2에서 두칸 올라왓을때 n-3 에서 2칸올라와 n-1에오고 그후 왓을때만
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int n = sc.nextInt();
+		int n = Integer.parseInt(br.readLine());
 
 		int[] steps = new int[n + 1];
 		int[] dp = new int[n + 1];
 
 		for (int i = 1; i < n + 1; i++) {
-			steps[i] = sc.nextInt();
+			steps[i] = Integer.parseInt(br.readLine());
 		}
 		if (n == 1) {
-		    System.out.println(steps[1]); 
-		    return;
+			System.out.println(steps[1]);
+			return;
 		}
 		if (n == 2) {
-		    System.out.println(steps[1] + steps[2]); 
-		    return;
+			System.out.println(steps[1] + steps[2]);
+			return;
 		}
 
 		dp[1] = steps[1];
 		dp[2] = steps[1] + steps[2];
 
-		for (int i = 3; i < n+1; i++) {
+		for (int i = 3; i < n + 1; i++) {
 			dp[i] = Math.max(dp[i - 2], dp[i - 3] + steps[i - 1]) + steps[i];
 		}
 
