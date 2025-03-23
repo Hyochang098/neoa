@@ -47,57 +47,28 @@ public class Main {
     }
 
     static int cal() {
-        int score = 0;
         int inning = 0;
-        int order = 0;
+        int order = -1;
+        int score = 0;
 
         while (inning < n) {
-            int out = 0;
-            boolean[] base = new boolean[4];
-
-            while (out < 3) {
-                int player = lineup[order];
-                int result = info[inning][player];
-
-                if (result == 0) {
-                    out++;
-                } else if (result == 1) {
-                    if (base[3])
-                        score++;
-                    base[3] = base[2];
-                    base[2] = base[1];
-                    base[1] = true;
-                } else if (result == 2) {
-                    if (base[3])
-                        score++;
-                    if (base[2])
-                        score++;
-                    base[3] = base[1];
-                    base[2] = true;
-                    base[1] = false;
-                } else if (result == 3) {
-                    if (base[3])
-                        score++;
-                    if (base[2])
-                        score++;
-                    if (base[1])
-                        score++;
-                    base[3] = true;
-                    base[2] = false;
-                    base[1] = false;
-                } else if (result == 4) {
-                    for (int i = 1; i <= 3; i++) {
-                        if (base[i])
-                            score++;
-                        base[i] = false;
-                    }
-                    score++;
-                }
+            int outcnt = 0;
+            int base = 0;
+            while (outcnt < 3) {
                 order = (order + 1) % 9;
+                int result = info[inning][lineup[order]];
+                if (result == 0) {
+                    outcnt++;
+                } else {
+                    base <<= result;
+                    base |= 1 << (result - 1);
+
+                    score += Integer.bitCount(base >> 3);
+                    base &= 0b111;
+                }
             }
             inning++;
         }
-
         return score;
     }
 }
