@@ -1,0 +1,48 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+	// 2263 - 트리의 순회
+	// 인오더 포스터 오더를 보고 원래 트리를 알아내고
+	// 프리오더로 출력
+
+	// 인오더 - 중위(왼 루 오)
+	// 포스트오더 - 후위(왼 오 루)
+	// 프리오더 - 전위 (루 왼 오)
+	static int[] in, post;
+	static Map<Integer, Integer> map = new HashMap<>();
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+
+		int n = sc.nextInt();
+		in = new int[n];
+		post = new int[n];
+
+		for (int i = 0; i < n; i++) {
+			in[i] = sc.nextInt();
+			map.put(in[i], i);
+		}
+
+		for (int i = 0; i < n; i++) {
+			post[i] = sc.nextInt();
+		}
+
+		find(0, n - 1, 0, n - 1);
+	}
+
+	static void find(int inst, int inend, int postst, int postend) {
+		if (inst > inend || postst > postend) {
+			return;
+		}
+		int root = post[postend];
+		System.out.print(root + " ");
+
+		int idx = map.get(root);
+		int left = idx - inst;
+
+		find(inst, idx - 1, postst, postst + left - 1);
+		find(idx + 1, inend, postst + left, postend - 1);
+	}
+}
