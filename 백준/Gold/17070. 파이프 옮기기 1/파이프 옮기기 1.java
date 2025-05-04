@@ -1,64 +1,42 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 public class Main {
 
-	static int n;
-	static int[][] house;
-	static int count = 0;
+    static int N;
+    static int[][] map;
+    static int[][][] dp;
 
-	static class pipe {
-		int x, y, dir;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        N = sc.nextInt();
+        map = new int[N][N];
+        dp = new int[N][N][3]; // [x][y][dir]
 
-		pipe(int x, int y, int dir) {
-			this.x = x;
-			this.y = y;
-			this.dir = dir;
-		}
-	}
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < N; j++)
+                map[i][j] = sc.nextInt();
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		Scanner sc = new Scanner(System.in);
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		n = Integer.parseInt(br.readLine());
-		house = new int[n][n];
-		StringTokenizer st;
-		for (int i = 0; i < n; i++) {
-			st = new StringTokenizer(br.readLine());
-			for (int j = 0; j < n; j++) {
-				house[i][j] = Integer.parseInt(st.nextToken());
-			}
-		}
+        // 초기값: (0, 1) 위치에 가로 방향 파이프
+        dp[0][1][0] = 1;
 
-		dfs(new pipe(0, 1, 0));
-		System.out.println(count);
-	}
+        for (int x = 0; x < N; x++) {
+            for (int y = 2; y < N; y++) { // y는 2부터 (0,1) 시작을 고려
+                if (map[x][y] == 1) continue;
 
-	static void dfs(pipe p) {
-		if (p.x == n - 1 && p.y == n - 1) {
-			count++;
-			return;
-		}
+                // 가로
+                dp[x][y][0] = dp[x][y - 1][0] + dp[x][y - 1][2];
 
-		int x = p.x;
-		int y = p.y;
-		int dir = p.dir;
+                // 세로
+                if (x > 0)
+                    dp[x][y][1] = dp[x - 1][y][1] + dp[x - 1][y][2];
 
-		if (dir == 0 || dir == 2) {
-			if (y + 1 < n && house[x][y + 1] == 0) {
-				dfs(new pipe(x, y + 1, 0));
-			}
-		}
-		if (dir == 1 || dir == 2) {
-			if (x + 1 < n && house[x + 1][y] == 0) {
-				dfs(new pipe(x + 1, y, 1));
-			}
-		}
-		if (x + 1 < n && y + 1 < n && house[x][y + 1] == 0 && house[x + 1][y] == 0 && house[x + 1][y + 1] == 0) {
-			dfs(new pipe(x + 1, y + 1, 2));
-		}
-	}
+                // 대각선
+                if (x > 0 && map[x - 1][y] == 0 && map[x][y - 1] == 0)
+                    dp[x][y][2] = dp[x - 1][y - 1][0] + dp[x - 1][y - 1][1] + dp[x - 1][y - 1][2];
+            }
+        }
+
+        int answer = dp[N - 1][N - 1][0] + dp[N - 1][N - 1][1] + dp[N - 1][N - 1][2];
+        System.out.println(answer);
+    }
 }
