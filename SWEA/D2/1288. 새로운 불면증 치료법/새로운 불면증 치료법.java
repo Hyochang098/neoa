@@ -1,29 +1,35 @@
+
 import java.util.Scanner;
 
-public class Solution {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int t = sc.nextInt();
-		for (int tc = 1; tc <= t; tc++) {
-			int n = sc.nextInt();// 입력
-			boolean[] check = new boolean[10];// 확인
-			int cnt = 0;// 10개 모엿는지
-			int ans = 1;// 몇n까지?
-			while (cnt < 10) {
-				String str = String.valueOf(n * ans);
-				for (int i = 0; i < str.length(); i++) {
-					int idx = str.charAt(i)-'0';
-					if (!check[idx]) {
-						check[idx] = true;
-						cnt++;
-					}
+class Solution {
 
-				}
-				ans++;
-			}
-			int real = (ans-1)*n;
-			System.out.println("#"+tc+" "+real);
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        for (int i = 1; i <= T; i++) {
+            int n = sc.nextInt();
+            int step = 1;
+            boolean[] visited = new boolean[10];
+            int cnt=0;
 
-		}
-	}
+            while (true) {
+                int cur = n * step;
+                String s = String.valueOf(cur);
+                for(int k=0;k<s.length();k++) {
+                    if (visited[s.charAt(k) - '0']) {
+                        continue;
+                    }
+                    visited[s.charAt(k) - '0'] = true;
+                    cnt++;
+                }
+                if(cnt==10) {
+                    System.out.println("#" + i + " " + cur);
+                    break;
+                }
+                step++;
+            }
+
+        }
+
+    }
 }
