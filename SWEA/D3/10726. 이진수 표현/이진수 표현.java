@@ -1,28 +1,20 @@
-
 import java.util.Scanner;
 
-public class Solution {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int t = sc.nextInt();
-		for (int tc = 1; tc <= t; tc++) {
+class Solution {
 
-			int n = sc.nextInt();
-			int m = sc.nextInt();
-			boolean check = true;
-			for (int i = 0; i < n; i++) {
-				if((m&(1<<i))==0) {
-					check=false;
-					break;
-				}
-				
-			}
-			if (check)
-				System.out.println("#"+tc+" ON");
-			else
-				System.out.println("#"+tc+" OFF");
-			// 2진수 변환? 없이 && 1111(n개만큼)이랑 하면 됮 ㅣ않음?
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        for (int i = 1; i <= T; i++) {
+            int n = sc.nextInt();
+            int m = sc.nextInt();
 
-		}
-	}
+            int mask = (1 << n) - 1;
+            if ((m & mask) == mask) {
+                System.out.println("#" + i + " ON");
+            } else {
+                System.out.println("#" + i + " OFF");
+            }
+        }
+    }
 }
