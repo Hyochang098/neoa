@@ -3,62 +3,66 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Main {
-    static class Edge {
+    static class Edge implements Comparable<Edge> {
         int to, cost;
         Edge(int to, int cost) {
             this.to = to;
             this.cost = cost;
         }
+
+        @Override
+        public int compareTo(Edge o) {
+            return this.cost - o.cost;
+        }
     }
-    static int N, M, S, D;
+    static int n, m, s, d;
     static List<Edge>[] graph;
     static List<Integer>[] prev;
     static int[] dist;
-    static final int INF = 1_000_000_000;
+    static final int INF = 1000000000;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         while (true) {
-            String[] nm = br.readLine().split(" ");
-            N = Integer.parseInt(nm[0]);
-            M = Integer.parseInt(nm[1]);
-            if (N == 0 && M == 0) break;
+            String[] input = br.readLine().split(" ");
+            n = Integer.parseInt(input[0]);
+            m = Integer.parseInt(input[1]);
+            if (n == 0 && m == 0) break;
 
-            String[] sd = br.readLine().split(" ");
-            S = Integer.parseInt(sd[0]);
-            D = Integer.parseInt(sd[1]);
+            String[] in = br.readLine().split(" ");
+            s = Integer.parseInt(in[0]);
+            d = Integer.parseInt(in[1]);
 
-            graph = new ArrayList[N];
-            prev = new ArrayList[N];
-            for (int i = 0; i < N; i++) {
+            graph = new ArrayList[n];
+            prev = new ArrayList[n];
+            for (int i = 0; i < n; i++) {
                 graph[i] = new ArrayList<>();
                 prev[i] = new ArrayList<>();
             }
 
-            for (int i = 0; i < M; i++) {
-                String[] uvp = br.readLine().split(" ");
-                int u = Integer.parseInt(uvp[0]);
-                int v = Integer.parseInt(uvp[1]);
-                int p = Integer.parseInt(uvp[2]);
+            for (int i = 0; i <m; i++) {
+                String[] tmp = br.readLine().split(" ");
+                int u = Integer.parseInt(tmp[0]);
+                int v = Integer.parseInt(tmp[1]);
+                int p = Integer.parseInt(tmp[2]);
                 graph[u].add(new Edge(v, p));
             }
 
-            dist = new int[N];
+            dist = new int[n];
             Arrays.fill(dist, INF);
-            dijkstra(S);
+            find(s);
 
             Queue<Integer> q = new LinkedList<>();
-            q.add(D);
-            boolean[][] removed = new boolean[N][N];
+            q.add(d);
+            boolean[][] removed = new boolean[n][n];
             while (!q.isEmpty()) {
                 int now = q.poll();
                 for (int prevNode : prev[now]) {
@@ -69,8 +73,8 @@ public class Main {
                 }
             }
 
-            List<Edge>[] newGraph = new ArrayList[N];
-            for (int i = 0; i < N; i++) {
+            List<Edge>[] newGraph = new ArrayList[n];
+            for (int i = 0; i < n; i++) {
                 newGraph[i] = new ArrayList<>();
                 for (Edge e : graph[i]) {
                     if (!removed[i][e.to]) {
@@ -81,16 +85,16 @@ public class Main {
             graph = newGraph;
 
             Arrays.fill(dist, INF);
-            dijkstra(S);
+            find(s);
 
-            int answer = dist[D];
+            int answer = dist[d];
             sb.append(answer == INF ? -1 : answer).append('\n');
         }
         System.out.print(sb);
     }
 
-    static void dijkstra(int start) {
-        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingInt(e -> e.cost));
+    static void find(int start) {
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
         dist[start] = 0;
         pq.offer(new Edge(start, 0));
         while (!pq.isEmpty()) {
